@@ -1,7 +1,3 @@
-require 'dmarc/uri'
-
-require 'uri'
-
 module DMARC
   #
   # DMARC parser.

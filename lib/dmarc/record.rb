@@ -283,7 +283,6 @@ module DMARC
     #
     def self.from_txt(rec)
       parse(rec)
-      record.tap { record.validate! }
     end
 
     #
