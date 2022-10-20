@@ -75,14 +75,6 @@ describe Record do
         expect(rec.p).to eq :quarantine
       end
     end
-
-    context 'with an invalid record' do
-      it 'raises an InvalidRecord error' do
-        expect {
-          subject.parse('v=XXXXXXXXXX')
-        }.to raise_error(InvalidRecord)
-      end
-    end
   end
 
   describe ".query" do

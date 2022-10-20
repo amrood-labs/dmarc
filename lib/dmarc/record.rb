@@ -1,6 +1,6 @@
 require 'dmarc/dmarc'
 require 'dmarc/parser'
-require 'dmarc/exceptions'
+require 'dmarc/validator'
 
 require 'resolv'
 
@@ -10,27 +10,32 @@ module DMARC
     # `p` field.
     # 
     # @return [:none, :quarantine, :reject]
-    attr_reader :p
+    attr_accessor :p
 
     # `rua` field.
     #
     # @return [Array<Uri>]
-    attr_reader :rua
+    attr_accessor :rua
 
     # `rua` field.
     #
     # @return [Array<Uri>]
-    attr_reader :ruf
+    attr_accessor :ruf
 
     # `sp` field.
     # 
     # @return [:none, :quarantine, :reject]
-    attr_reader :sp
+    attr_accessor :sp
 
     # `v` field.
     #
     # @return [:DMARC1]
-    attr_reader :v
+    attr_accessor :v
+
+    # `v` field.
+    #
+    # @return [Array<Error>]
+    attr_accessor :errors
 
     #
     # Initializes the record.
@@ -72,6 +77,7 @@ module DMARC
       @rua   = attributes[:rua]
       @ruf   = attributes[:ruf]
       @sp    = attributes[:sp]
+      @errors = []
     end
 
     #
@@ -113,7 +119,7 @@ module DMARC
     #   The value of the `adkim=` field, or `:r` if the field was omitted.
     #
     def adkim
-      @adkim || :r
+      @adkim || 'r'
     end
 
     #
@@ -134,7 +140,7 @@ module DMARC
     #   The value of the `aspf=` field, or `:r` if the field was omitted.
     #
     def aspf
-      @aspf || :r
+      @aspf || 'r'
     end
 
     #
@@ -208,7 +214,7 @@ module DMARC
     #   The value of the `rf=` field, or `:afrf` if the field was omitted.
     #
     def rf
-      @rf || :afrf
+      @rf || 'afrf'
     end
 
     #
@@ -263,17 +269,13 @@ module DMARC
     # @return [Record]
     #   The parsed DMARC record.
     #
-    # @raise [InvalidRecord]
-    #   The DMARC record could not be parsed.
-    #
     # @since 0.3.0
     #
     # @api public
     #
     def self.parse(record)
-      new(Parser.parse(record))
-    rescue Parslet::ParseFailed => error
-      raise(InvalidRecord.new(error.message,error.cause))
+      record = new(Parser.parse(record))
+      record.tap { record.validate! }
     end
 
     #
@@ -281,6 +283,7 @@ module DMARC
     #
     def self.from_txt(rec)
       parse(rec)
+      record.tap { record.validate! }
     end
 
     #
@@ -295,9 +298,6 @@ module DMARC
     # @return [Record, nil]
     #   The parsed DMARC record. If no DMARC record was found, `nil` will be
     #   returned.
-    #
-    # @raise [InvalidRecord]
-    #   The DMARC record could not be parsed.
     #
     # @since 0.3.0
     #
@@ -355,6 +355,15 @@ module DMARC
       tags << "pct=#{@pct}"           if @pct
 
       return tags.join('; ')
+    end
+
+    # 
+    # Validates the record for any issues.
+    # 
+    # @return [nil]
+    # 
+    def validate!
+      Validator.validate(self)
     end
 
   end

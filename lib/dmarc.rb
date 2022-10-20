@@ -1,4 +1,5 @@
-require 'dmarc/exceptions'
+require 'dmarc/error'
+require 'dmarc/validator'
 require 'dmarc/dmarc'
 require 'dmarc/record'
 require 'dmarc/parser'
