@@ -9,7 +9,7 @@ module DMARC
     end
 
     def to_s
-      msg = "Invalid #{tag} tag. Current value is #{current_value}. Value should be "
+      msg = "Invalid #{tag} tag. Current value is #{current_value.present? ? current_value : 'blank'}. Value should be "
       msg << if [Range, Array].include?(expected_value.class)
         if current_value.is_a?(Array)
           # Handle case for :fo tag.
