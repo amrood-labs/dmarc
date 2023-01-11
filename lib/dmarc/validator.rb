@@ -33,7 +33,7 @@ module DMARC
           success = if [Range, Array].include?(expcted_value.class)
             # Handle case for :fo tag.
             if tag_value.is_a?(Array)
-              (tag_value && expcted_value) == expcted_value
+              (tag_value + expcted_value).uniq.sort == expcted_value
             else
               expcted_value.include? tag_value
             end
