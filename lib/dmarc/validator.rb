@@ -51,10 +51,12 @@ module DMARC
         %i[rua ruf].each do |tag|
           tag_value = record.send(tag)
 
-          tag_value.each do |uri|
-            URI.parse uri
-          rescue
-            record.errors << Error.new(tag, uri, URI_FORMAT)
+          unless tag_value.blank?
+            tag_value.each do |uri|
+              URI.parse uri
+            rescue
+              record.errors << Error.new(tag, uri, URI_FORMAT)
+            end
           end
         end
       end
