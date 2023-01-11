@@ -8,7 +8,7 @@ module DMARC
       v: 'DMARC1'
     }.freeze
     OPTIONAL_VALIDATIONS = {
-      fo: %w[0 1 2 3],
+      fo: %w[0 1 d s],
       rf: %w[afrf iodef],
       aspf: %w[r s],
       adkim: %w[r s],
