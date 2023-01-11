@@ -66,7 +66,7 @@ module DMARC
     # @option attributes [:DMARC1] :v
     #
     def initialize(attributes={})
-      @v     = attributes.fetch(:v)
+      @v     = attributes[:v]
       @adkim = attributes[:adkim]
       @aspf  = attributes[:aspf]
       @fo    = attributes[:fo]
