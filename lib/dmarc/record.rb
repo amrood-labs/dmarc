@@ -329,6 +329,7 @@ module DMARC
       hash[:fo]    = @fo    if @fo
       hash[:rf]    = @rf    if @rf
       hash[:pct]   = @pct   if @pct
+      hash[:errors] = @errors if @errors.present?
 
       return hash
     end
