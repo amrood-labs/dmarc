@@ -261,6 +261,18 @@ module DMARC
     end
 
     #
+    # Determines if the record have errors
+    #
+    # @return [Boolean]
+    #
+    # @since 0.5.0
+    #
+    def errors?
+      @errors.present?
+    end
+
+
+    #
     # Parses a DMARC record.
     #
     # @param [String] record
@@ -329,7 +341,7 @@ module DMARC
       hash[:fo]    = @fo    if @fo
       hash[:rf]    = @rf    if @rf
       hash[:pct]   = @pct   if @pct
-      hash[:errors] = @errors if @errors.present?
+      hash[:errors] = @errors if errors?
 
       return hash
     end
