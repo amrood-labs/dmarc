@@ -9,13 +9,21 @@ module DMARC
     end
 
     def to_s
-      msg = "Invalid #{tag} tag. Current value is #{current_value.present? ? current_value : 'blank'}. Value should be "
+      msg = "Invalid #{tag} tag. Current value is "
+      msg <<  if current_value.is_a?(Array)
+                current_value.join(':')
+              elsif current_value.blank?
+                'blank'
+              else
+                current_value.to_s
+              end
+      msg << ". Value should be "
       msg << if [Range, Array].include?(expected_value.class)
         if current_value.is_a?(Array)
           # Handle case for :fo tag.
           "one or more colon-separated list of characters from #{expected_value.join(', ')}"
         else
-          "between #{expected_value.first} and #{expected_value.last}"
+          "one of these: #{expected_value.join(', ')}"
         end
       else
         expected_value
