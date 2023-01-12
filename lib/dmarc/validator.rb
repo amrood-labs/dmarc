@@ -8,7 +8,7 @@ module DMARC
       v: 'DMARC1'
     }.freeze
     OPTIONAL_VALIDATIONS = {
-      fo: %w[0 1 2 3],
+      fo: %w[0 1 d s],
       rf: %w[afrf iodef],
       aspf: %w[r s],
       adkim: %w[r s],
@@ -33,7 +33,7 @@ module DMARC
           success = if [Range, Array].include?(expcted_value.class)
             # Handle case for :fo tag.
             if tag_value.is_a?(Array)
-              (tag_value && expcted_value) == expcted_value
+              (tag_value + expcted_value).uniq.sort == expcted_value
             else
               expcted_value.include? tag_value
             end
@@ -51,10 +51,12 @@ module DMARC
         %i[rua ruf].each do |tag|
           tag_value = record.send(tag)
 
-          tag_value.each do |uri|
-            URI.parse uri
-          rescue
-            record.errors << Error.new(tag, uri, URI_FORMAT)
+          unless tag_value.blank?
+            tag_value.each do |uri|
+              URI.parse uri
+            rescue
+              record.errors << Error.new(tag, uri, URI_FORMAT)
+            end
           end
         end
       end
