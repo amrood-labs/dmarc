@@ -93,6 +93,7 @@ module DMARC
 
     #
     # The `sp=` field.
+    attr_writer :sp
     #
     # @return [:none, :quarantine, :reject]
     #   The value of the `sp=` field, or that of {#p} if the field was omitted.
@@ -114,6 +115,7 @@ module DMARC
 
     #
     # `adkim=` field.
+    attr_writer :adkim
     #
     # @return [:r, :s]
     #   The value of the `adkim=` field, or `:r` if the field was omitted.
@@ -134,7 +136,8 @@ module DMARC
     end
 
     #
-    # `aspf` field.
+    # `aspf=` field.
+    attr_writer :aspf
     #
     # @return [:r, :s]
     #   The value of the `aspf=` field, or `:r` if the field was omitted.
@@ -155,7 +158,8 @@ module DMARC
     end
 
     #
-    # `fo` field.
+    # `fo=` field.
+    attr_writer :fo
     #
     # @return [Array<'0', '1', 'd', 's'>]
     #   The value of the `fo=` field, or `["0"]` if the field was omitted.
@@ -188,6 +192,7 @@ module DMARC
 
     #
     # `pct` field.
+    attr_writer :pct
     #
     # @return [Integer]
     #   The value of the `pct=` field, or `100` if the field was omitted.
@@ -209,6 +214,7 @@ module DMARC
 
     #
     # `rf` field.
+    attr_writer :rf
     # 
     # @return [:afrf, :iodef]
     #   The value of the `rf=` field, or `:afrf` if the field was omitted.
@@ -230,6 +236,7 @@ module DMARC
 
     #
     # `ri` field.
+    attr_writer :ri
     #
     # @return [Integer]
     #   The value of the `ri=` field, or `86400` if the field was omitted.
