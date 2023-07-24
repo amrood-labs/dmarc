@@ -7,12 +7,13 @@ module DMARC
   class Parser
     def self.parse(record)
       parsed_record = record.split(';').map do |tag|
+	next if tag.blank?
         tags = tag.split('=')
         tags.each(&:strip!)
         tags.length < 2 ? tags << nil : tags.length > 2 ? tags.take(2) : tags
       end
-
-      parsed_record = parsed_record.to_h.transform_keys(&:to_sym)
+      
+      parsed_record = parsed_record.compact.to_h.transform_keys(&:to_sym)
       
       transform(parsed_record)
     end
