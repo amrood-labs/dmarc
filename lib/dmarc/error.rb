@@ -2,13 +2,16 @@ module DMARC
   class Error
     attr_accessor :tag, :current_value, :expected_value
 
-    def initialize(tag, current_value, expected_value)
+    def initialize(tag, current_value, expected_value, exception = nil )
       @tag = tag
       @current_value = current_value
       @expected_value = expected_value
+      @exception = exception
     end
 
     def to_s
+      return exception_message if @exception.present?
+
       msg = "Invalid #{tag} tag. Current value is "
       msg <<  if current_value.is_a?(Array)
                 current_value.join(':')
@@ -28,6 +31,10 @@ module DMARC
       else
         expected_value
       end
+    end
+
+    def exception_message
+      "#{@exception}. If your domain has special characters then use Punycode."
     end
   end
 end
