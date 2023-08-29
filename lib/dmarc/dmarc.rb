@@ -24,7 +24,10 @@ module DMARC
       return resolver.getresource(
         host, Resolv::DNS::Resource::IN::TXT
       ).strings.join
-    rescue Resolv::ResolvError
+    rescue Resolv::ResolvError => e
+      e
+    rescue Encoding::CompatibilityError => e
+      e
     end
   end
 end

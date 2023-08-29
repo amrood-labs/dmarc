@@ -1,6 +1,7 @@
 require 'dmarc/dmarc'
 require 'dmarc/parser'
 require 'dmarc/validator'
+require 'dmarc/error'
 
 require 'resolv'
 
@@ -323,7 +324,13 @@ module DMARC
     #
     def self.query(domain,resolver=Resolv::DNS.new)
       if (dmarc = DMARC.query(domain,resolver))
-        parse(dmarc)
+        if dmarc.is_a?(String)
+          parse(dmarc)
+        else
+          record = new
+          record.errors << Error.new(nil, nil, nil, dmarc.message)
+          record
+        end
       end
     end
 
