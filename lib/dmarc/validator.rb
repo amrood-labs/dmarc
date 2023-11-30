@@ -53,7 +53,7 @@ module DMARC
 
           unless tag_value.blank?
             tag_value.each do |uri|
-              URI.parse uri
+              URI.parse uri.strip
             rescue
               record.errors << Error.new(tag, uri, URI_FORMAT)
             end
