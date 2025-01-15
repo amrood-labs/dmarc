@@ -66,6 +66,8 @@ module DMARC
     #
     # @option attributes [:DMARC1] :v
     #
+    # DMARCbis New tags
+    #
     # @option attributes [:none, :quarantine, :reject] :np
     #
     # @option attributes [:y, :n, :u] :psd
