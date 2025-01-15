@@ -12,6 +12,9 @@ module DMARC
       rf: %w[afrf iodef],
       aspf: %w[r s],
       adkim: %w[r s],
+      np: %w[none quarantine reject],
+      psd: %w[y n u],
+      t: %w[y n],
     }.freeze
     URI_FORMAT = 'mailto:username@somehost.com'.freeze
 

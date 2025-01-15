@@ -66,6 +66,14 @@ module DMARC
     #
     # @option attributes [:DMARC1] :v
     #
+    # DMARCbis New tags
+    #
+    # @option attributes [:none, :quarantine, :reject] :np
+    #
+    # @option attributes [:y, :n, :u] :psd
+    #
+    # @option attributes [:y, :n] :t
+    #
     def initialize(attributes={})
       @v     = attributes[:v]
       @adkim = attributes[:adkim]
@@ -78,6 +86,9 @@ module DMARC
       @rua   = attributes[:rua]
       @ruf   = attributes[:ruf]
       @sp    = attributes[:sp]
+      @np    = attributes[:np]
+      @psd   = attributes[:psd]
+      @t     = attributes[:t]
       @errors = []
     end
 
@@ -247,6 +258,72 @@ module DMARC
     end
 
     #
+    # `np` field.
+    attr_writer :np
+    #
+    # @return [:none, :quarantine, :reject]
+    #   The value of the `np=` field, or that of {#sp, #p} if the field was omitted.
+    #
+    def np
+      @np || @sp || @p
+    end
+
+    #
+    # Determines whether the `np=` field was specified.
+    #
+    # @return [Boolean]
+    #
+    # @since 0.4.0
+    #
+    def np?
+      !@np.nil?
+    end
+
+    #
+    # `psd` field.
+    attr_writer :psd
+    #
+    # @return [:y, :n, :u]
+    #   The value of the `psd=` field, or `u` if the field was omitted.
+    #
+    def psd
+      @psd || 'u'
+    end
+
+    #
+    # Determines whether the `psd=` field was specified.
+    #
+    # @return [Boolean]
+    #
+    # @since 0.4.0
+    #
+    def psd?
+      !@psd.nil?
+    end
+
+    #
+    # `t` field.
+    attr_writer :t
+    #
+    # @return [:y, :n]
+    #   The value of the `t=` field, or `n` if the field was omitted.
+    #
+    def t
+      @t || 'n'
+    end
+
+    #
+    # Determines whether the `t=` field was specified.
+    #
+    # @return [Boolean]
+    #
+    # @since 0.4.0
+    #
+    def t?
+      !@t.nil?
+    end
+
+    #
     # Determines if the `rua=` field was specified?
     #
     # @return [Boolean]
@@ -347,14 +424,17 @@ module DMARC
       hash[:v]     = @v     if @v
       hash[:p]     = @p     if @p
       hash[:sp]    = @sp    if @sp
+      hash[:np]    = @np    if @np
       hash[:rua]   = @rua   if @rua
       hash[:ruf]   = @ruf   if @ruf
       hash[:adkim] = @adkim if @adkim
       hash[:aspf]  = @aspf  if @aspf
-      hash[:ri]    = @ri    if @ri
       hash[:fo]    = @fo    if @fo
-      hash[:rf]    = @rf    if @rf
+      hash[:psd]   = @psd   if @psd
+      hash[:t]     = @t     if @t
       hash[:pct]   = @pct   if @pct
+      hash[:rf]    = @rf    if @rf
+      hash[:ri]    = @ri    if @ri
       hash[:errors] = @errors if errors?
 
       return hash
@@ -371,14 +451,17 @@ module DMARC
       tags << "v=#{@v}"               if @v
       tags << "p=#{@p}"               if @p
       tags << "sp=#{@sp}"             if @sp
+      tags << "np=#{@np}"             if @np
       tags << "rua=#{@rua.join(',')}" if @rua
       tags << "ruf=#{@ruf.join(',')}" if @ruf
       tags << "adkim=#{@adkim}"       if @adkim
       tags << "aspf=#{@aspf}"         if @aspf
-      tags << "ri=#{@ri}"             if @ri
       tags << "fo=#{@fo.join(':')}"   if @fo
-      tags << "rf=#{@rf}"             if @rf
+      tags << "psd=#{@psd}"           if @psd
+      tags << "t=#{@t}"               if @t
       tags << "pct=#{@pct}"           if @pct
+      tags << "rf=#{@rf}"             if @rf
+      tags << "ri=#{@ri}"             if @ri
 
       return tags.join('; ')
     end
